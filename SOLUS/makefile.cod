@@ -1,0 +1,21 @@
+CC = gcc -g
+CFLAGS = -Wall -pedantic -ansi
+HEADERS = utils.h
+
+EXE = menu
+OBJ = $(EXE).o utils.o 
+
+all: $(EXE)
+
+%.o: %.c $(HEADERS)
+	@echo Compiling $<...
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+menu: $(DEPS) $(OBJ)
+	$(CC) -o $(EXE) $(OBJ) $(LDLIBS)
+
+run:
+	valgrind --leak-check=full ./$(EXE)
+
+clean :
+	rm -f *.o core $(EXE)
