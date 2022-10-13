@@ -5,7 +5,7 @@ Empezamos buscando que clientes han hecho un pedido y un pago. Los unimos para v
 estamos trabajando. A partir de ahi hacemos un join con employee para ver el id del empleado
 que ha vendido esos productos al cliente, con esa informacion de los empleados podemos sacar la oficina desde la que han vendido.
 
-Ahora tenemos que encontrar los paises donde se han hecho las menores ventas 
+Ahora tenemos que encontrar los paises donde se han hecho las menores ventas para poder definir el pais que no ha vendido nada
 */
 SELECT tabla2.country country,
        Count(*)numoffices
@@ -15,7 +15,7 @@ FROM   ((SELECT o.officecode,
         EXCEPT
         (SELECT e.officecode,
                 ofc.country
-         FROM   customers c
+         FROM   customers cx
                 JOIN ((SELECT DISTINCT o.customernumber
                        FROM   orders o
                        WHERE  o.orderdate >= '2003-01-01'
