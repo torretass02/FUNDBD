@@ -1,164 +1,37 @@
 /*
---Clientes que han realizado un PEDIDO en el año 2003.
---(Utilizamos distinct para eliminar las repeticiones)
 
-select distinct o.customernumber 
-from   orders o 
-where  o.orderdate >= '2003-01-01' 
-       and o.shippeddate <= '2003-12-31' 
-       and o.shippeddate IS NOT NULL 
+Estamos buscando los pedidos que se han realizado en 2003. Para ahi sacar la oficina que no ha vendido nada.
+Empezamos buscando que clientes han hecho un pedido y un pago. Los unimos para ver con que datos
+estamos trabajando. A partir de ahi hacemos un join con employee para ver el id del empleado
+que ha vendido esos productos al cliente, con esa informacion de los empleados podemos sacar la oficina desde la que han vendido.
 
-
---Clientes que han realizado un PAGO en el año 2003.
-
-select distinct pt.customernumber 
-from   payments pt 
-where  pt.paymentdate >= '2003-01-01' 
-       and pt.paymentdate <= '2003-12-31' 
-
-
---Unión de los clientes que han realizado un pedido
---con los que han pagado en 2003.
-
-(select distinct o.customernumber 
- from   orders o 
- where  o.orderdate >= '2003-01-01' 
-        and o.shippeddate <= '2003-12-31' 
-        and o.shippeddate IS NOT NULL) 
-union 
-(select distinct pt.customernumber 
- from   payments pt 
- where  pt.paymentdate >= '2003-01-01' 
-        and pt.paymentdate <= '2003-12-31') 
-
-
---Hacemos join con customer para obtener 
---el id del empleado que vende al cliente.
-
-select c.customernumber, 
-       c.salesrepemployeenumber 
-from   customers c 
-       join ((select distinct o.customernumber 
-              from   orders o 
-              where  o.orderdate >= '2003-01-01' 
-                     and o.shippeddate <= '2003-12-31' 
-                     and o.shippeddate IS NOT NULL) 
-             union 
-             (select distinct pt.customernumber 
-              from   payments pt 
-              where  pt.paymentdate >= '2003-01-01' 
-                     and pt.paymentdate <= '2003-12-31'))as tabla1 
-         on c.customernumber = tabla1.customernumber 
-		
-
---A continuación, hacemos join con employee para 
---saber la oficina en la que trabaja cada uno de los empleados.
-
-select c.customernumber, 
-       c.salesrepemployeenumber, 
-       e.officecode 
-from   customers c 
-       join ((select distinct o.customernumber 
-              from   orders o 
-              where  o.orderdate >= '2003-01-01' 
-                     and o.shippeddate <= '2003-12-31' 
-                     and o.shippeddate IS NOT NULL) 
-             union 
-             (select distinct pt.customernumber 
-              from   payments pt 
-              where  pt.paymentdate >= '2003-01-01' 
-                     and pt.paymentdate <= '2003-12-31'))as tabla1 
-         on c.customernumber = tabla1.customernumber 
-       join employees e 
-         on e.employeenumber = c.salesrepemployeenumber 
-
-
---Hacemos join con offices para saber el país de cada una de las oficinas y mostramos  
---officecode y country. El siguiente paso es agrupar por country y officecode 
---para eliminar repeticiones.
-
-select e.officecode, 
-       ofc.country 
-from   customers c 
-       join ((select distinct o.customernumber 
-              from   orders o 
-              where  o.orderdate >= '2003-01-01' 
-                     and o.shippeddate <= '2003-12-31' 
-                     and o.shippeddate IS NOT NULL) 
-             union 
-             (select distinct pt.customernumber 
-              from   payments pt 
-              where  pt.paymentdate >= '2003-01-01' 
-                     and pt.paymentdate <= '2003-12-31'))as tabla1 
-         on c.customernumber = tabla1.customernumber 
-       join employees e 
-         on e.employeenumber = c.salesrepemployeenumber 
-       join offices ofc 
-         on ofc.officecode = e.officecode 
-group  by e.officecode, 
-          ofc.country 
-
-
---Obtenemos las que NO HAN COMPRADO...
---(en las anteriores consultas hemos conseguido 
---las oficinas que han recibido algún pedido o realizado algún pago).
-
-(select o.officecode, 
-        o.country 
- from   offices o) 
-except 
-(select e.officecode, 
-        ofc.country 
- from   customers c 
-        join ((select distinct o.customernumber 
-               from   orders o 
-               where  o.orderdate >= '2003-01-01' 
-                      and o.shippeddate <= '2003-12-31' 
-                      and o.shippeddate IS NOT NULL) 
-              union 
-              (select distinct pt.customernumber 
-               from   payments pt 
-               where  pt.paymentdate >= '2003-01-01' 
-                      and pt.paymentdate <= '2003-12-31'))as tabla1 
-          on c.customernumber = tabla1.customernumber 
-        join employees e 
-          on e.employeenumber = c.salesrepemployeenumber 
-        join offices ofc 
-          on ofc.officecode = e.officecode 
- group  by e.officecode, 
-           ofc.country) 
-
-
-
+Ahora tenemos que encontrar los paises donde se han hecho las menores ventas 
 */
---Agrupamos las oficinas por país, contamos el número de oficinas
---y ordenamos de mayor a menor.
-
-select tabla2.country country, 
-       Count(*)       numoffices 
-from   ((select o.officecode, 
-                o.country 
-         from   offices o) 
-        except 
-        (select e.officecode, 
-                ofc.country 
-         from   customers c 
-                join ((select distinct o.customernumber 
-                       from   orders o 
-                       where  o.orderdate >= '2003-01-01' 
-                              and o.shippeddate <= '2003-12-31' 
-                              and o.shippeddate IS NOT NULL) 
-                      union 
-                      (select distinct pt.customernumber 
-                       from   payments pt 
-                       where  pt.paymentdate >= '2003-01-01' 
-                              and pt.paymentdate <= '2003-12-31'))as tabla1 
-                  on c.customernumber = tabla1.customernumber 
-                join employees e 
-                  on e.employeenumber = c.salesrepemployeenumber 
-                join offices ofc 
-                  on ofc.officecode = e.officecode 
-         group  by e.officecode, 
-                   ofc.country)) as tabla2 
-group  by tabla2.country 
-order  by numoffices desc
+SELECT tabla2.country country,
+       Count(*)numoffices
+FROM   ((SELECT o.officecode,
+                o.country
+         FROM   offices o)
+        EXCEPT
+        (SELECT e.officecode,
+                ofc.country
+         FROM   customers c
+                JOIN ((SELECT DISTINCT o.customernumber
+                       FROM   orders o
+                       WHERE  o.orderdate >= '2003-01-01'
+                              AND o.shippeddate <= '2003-12-31'
+                              AND o.shippeddate IS NOT NULL)
+                      UNION
+                      (SELECT DISTINCT pt.customernumber
+                       FROM   payments pt
+                       WHERE  pt.paymentdate >= '2003-01-01'
+                              AND pt.paymentdate <= '2003-12-31'))AS tabla1
+                  ON c.customernumber = tabla1.customernumber
+                JOIN employees e
+                  ON e.employeenumber = c.salesrepemployeenumber
+                JOIN offices ofc
+                  ON ofc.officecode = e.officecode
+         GROUP  BY e.officecode,
+                   ofc.country)) AS tabla2
+GROUP  BY tabla2.country
+ORDER  BY numoffices DESC 
