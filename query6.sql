@@ -16,15 +16,15 @@ que el primer producto de cada pareja tuviese que tener obligatoriamente un prod
 mayor que el otro producto, de forma que eliminasemos la otra variante de cada pareja.
 
 */
-SELECT ord_1.productcode code_1,
-       ord_2.productcode code_2,
-       Count(*)        numcarros
+SELECT ord_1.productcode productcode_1,
+       ord_2.productcode productcode_2,
+       Count(*)        numero_de_carros
 FROM   orderdetails ord_1
        JOIN orderdetails ord_2
          ON ord_1.ordernumber = ord_2.ordernumber
 WHERE  ord_1.productcode <> ord_2.productcode
        AND ord_1.productcode > ord_2.productcode
-GROUP  BY code_1,
-          code_2
+GROUP  BY productcode_1,
+          productcode_2
 HAVING Count(*) > 1
-ORDER  BY numcarros ASC 
+ORDER  BY numero_de_carros ASC 

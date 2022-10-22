@@ -1,6 +1,0 @@
-query4: Oficina que ha vendido el mayor número de objetos
- officecode | total_products 
-------------+----------------
- 4          |          33887
-(1 fila)
-

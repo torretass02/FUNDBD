@@ -1,37 +1,43 @@
 /*
 
-Estamos buscando los pedidos que se han realizado en 2003. Para ahi sacar la oficina que no ha vendido nada.
-Empezamos buscando que clientes han hecho un pedido y un pago. Los unimos para ver con que datos
-estamos trabajando. A partir de ahi hacemos un join con employee para ver el id del empleado
-que ha vendido esos productos al cliente, con esa informacion de los empleados podemos sacar la oficina desde la que han vendido.
+Empezamos viendo los clientes que han hecho un pedido en 2003, unimos esos datos con la gente
+que ha pagado en 2003. Después de esto necesitamos hacer un Join con cliente para conseguir que
+agente ha ayudado con la compra, así saber el id del empleado y poder en el próximo paso unirlo 
+con Employee para ver la sucursal en la que están.
 
-Ahora tenemos que encontrar los paises donde se han hecho las menores ventas para poder definir el pais que no ha vendido nada
+Después del join ya podemos ver en que sucursal se hizo la compra. Hacemos join con offices para
+saber el país de cada una de las oficinas, el siguiente paso es agrupar por country y officecode 
+para eliminar repeticiones y poder sacar los datos en limpio. 
+
+Aquí ya tenemos todos los datos que necesitamos porque ya sabemos que países han vendido y que países 
+no han vendido. Ordenamos la tabla de forma descendiente y mostramos la solución.
+
 */
-SELECT tabla2.country country,
+SELECT taux.country country,
        Count(*)numoffices
 FROM   ((SELECT o.officecode,
                 o.country
          FROM   offices o)
         EXCEPT
         (SELECT e.officecode,
-                ofc.country
-         FROM   customers cx
+                of.country
+         FROM   customers c
                 JOIN ((SELECT DISTINCT o.customernumber
                        FROM   orders o
                        WHERE  o.orderdate >= '2003-01-01'
                               AND o.shippeddate <= '2003-12-31'
                               AND o.shippeddate IS NOT NULL)
                       UNION
-                      (SELECT DISTINCT pt.customernumber
-                       FROM   payments pt
-                       WHERE  pt.paymentdate >= '2003-01-01'
-                              AND pt.paymentdate <= '2003-12-31'))AS tabla1
-                  ON c.customernumber = tabla1.customernumber
+                      (SELECT DISTINCT pay.customernumber
+                       FROM   payments pay
+                       WHERE  pay.paymentdate >= '2003-01-01'
+                              AND pay.paymentdate <= '2003-12-31'))AS t
+                  ON c.customernumber = t.customernumber
                 JOIN employees e
                   ON e.employeenumber = c.salesrepemployeenumber
-                JOIN offices ofc
-                  ON ofc.officecode = e.officecode
+                JOIN offices of
+                  ON of.officecode = e.officecode
          GROUP  BY e.officecode,
-                   ofc.country)) AS tabla2
-GROUP  BY tabla2.country
+                   of.country)) AS taux
+GROUP  BY taux.country
 ORDER  BY numoffices DESC 
