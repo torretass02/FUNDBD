@@ -164,14 +164,14 @@ static int PrintRange(void){
     (void)SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) y, BufferLength, NULL);
     (void)SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) z, BufferLength, NULL);
     printf("\n");
-      /* Loop through the rows in the result-set */
-      while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {
-        printf("%d %s %s\n", x,y,z);
-      }
-
-      (void)SQLCloseCursor(stmt);
-      printf("\n");
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {
+      printf("%d %s %s\n", x,y,z);
     }
+
+    (void)SQLCloseCursor(stmt);
+    printf("\n");
+  }
 
   ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
   if (!SQL_SUCCEEDED(ret2)) {

@@ -10,48 +10,24 @@
 /* #ifndef A2BIS_MENU_TEMPLATE_H */
 /* #define A2BIS_MENU_TEMPLATE_H */
 
-/* Prototypes:
- * Since in this example this functions are not used outside menu_template
- * it does not make sense to create an include file and export them
- * BUT in your code it will make sense to break this file in many files
- * and create several include files with the prototypes
- *
- * A static function in C is a function that has a scope that is limited
- * to its object file. This means that the static function is only
- * visible in its object file. Therefore,
- * you need to remove the static keyword from the declaration
- * if the function is declared in a file and used in another
- * */
-
 static int ShowMainMenu();
-static void ShowRhymeMenu();
-static int ShowRhymeSubMenu();
-static void ShowFairyMenu();
-static int ShowFairySubMenu();
-static void PrintZub();
-static void PrintBigFatGit();
-static void PrintAliens();
-static int PrintMary();
-static void PrintJack();
-static void PrintLittleBoPeep();
+static void ShowProductsMenu();
+static int ShowProductsSubMenu();
+static void ShowOrdersMenu();
+static int ShowOrdersSubMenu();
+static void ShowCostumersMenu();
+static int ShowCostumersSubMenu();
+static int PrintOpen();
+static int PrintRange();
+static int PrintDetail();
+static int PrintStock();
+static int PrintFind();
+static void PrintBack();
+static int PrintFindCostumers();
+static int PrintListProducts();
+static int PrintBalance();
 
 /* #endif //A2BIS_MENU_TEMPLATE_H */
-
-/**
- * @file menu_template.c
- * @author rmarabini
- * @date 15 April 2020
- * @brief File containing an example of a menu system with submenus
- *
- * The following program allows a user to select a nursery rhyme
- * or a fairy tail from a menu. The menu has two levels, the top
- * one allows to select between fairy tails or nursery rhymes. The
- * second level (sub-menus) allow to select either a particular
- * rhyme or tail.
- *
- * @see https://bytes.com/topic/c/answers/567136-creating-menus-sub-menus
- */
-
 
 /**
  * @brief Entry point, shows and process main menu.
@@ -61,7 +37,7 @@ static void PrintLittleBoPeep();
  * corresponding submenu
  *
  * @return 0 if no error
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
 int main(void) {
     int nChoice = 0;
@@ -70,17 +46,17 @@ int main(void) {
         nChoice = ShowMainMenu();
         switch (nChoice) {
             case 1: {
-                ShowRhymeMenu();
+                ShowProductsMenu();
             }
                 break;
 
             case 2: {
-                ShowFairyMenu();
+                ShowOrdersMenu();
             }
                 break;
 
             case 3: {
-                ShowFairyMenu();
+                ShowCostumersMenu();
             }
                 break;
          
@@ -99,9 +75,8 @@ int main(void) {
  *
  *
  * @return selected entry in the menu
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
-
 int ShowMainMenu() {
     int nSelected = 0;
     char buf[16]; /* buffer for reading user input
@@ -134,33 +109,32 @@ int ShowMainMenu() {
 }
 
 /**
- * @brief Shows and processes the rhyme menu.
+ * @brief Shows and processes the Products menu.
  *
- * This function implements a loop that prints the rhyme
+ * This function implements a loop that prints the Products
  * menu, analyze the user selection and prints
- * the selected rhyme
+ * the selected Products
  * @return void
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
-
-void ShowRhymeMenu() {
+void ShowProductsMenu() {
     int nChoice = 0;
     do {
-        nChoice = ShowRhymeSubMenu();
+        nChoice = ShowProductsSubMenu();
         switch (nChoice) {
 
             case 1: {
-                PrintMary();
+                PrintStock();
             }
                 break;
 
             case 2: {
-                PrintJack();
+                PrintFind();
             }
                 break;
 
             case 3: {
-                PrintLittleBoPeep();
+                PrintBack();
             }
                 break;
         }
@@ -169,13 +143,12 @@ void ShowRhymeMenu() {
 }
 
 /**
- * @brief prints rhyme menu and allows to select an option.
+ * @brief prints Products menu and allows to select an option.
  *
  * @return selected option
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
-
- int ShowRhymeSubMenu() {
+ int ShowProductsSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -204,39 +177,38 @@ void ShowRhymeMenu() {
 }
 
 /**
- * @brief Shows and processes the fairy menu.
+ * @brief Shows and processes the Orders menu.
  *
- * This function implements a loop that prints the fairy
+ * This function implements a loop that prints the Orders
  * menu, analyze the user selection and prints
- * the selected fairy tail
+ * the selected Orders tail
  *
  * @return selected option
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
-
-void ShowFairyMenu() {
+void ShowOrdersMenu() {
     int nChoice = 0;
 
     do {
-        nChoice = ShowFairySubMenu();
+        nChoice = ShowOrdersSubMenu();
         switch (nChoice) {
             case 1: {
-                PrintZub();
+                PrintOpen();
             }
                 break;
 
             case 2: {
-                PrintBigFatGit();
+                PrintRange();
             }
                 break;
 
             case 3: {
-                PrintAliens();
+                PrintDetail();
             }
                 break;
 
             case 4: {
-                printf("Bye Bye\n\n");
+                PrintBack();
             }
                 break;
         }
@@ -245,12 +217,12 @@ void ShowFairyMenu() {
 }
 
 /**
- * @brief prints the fairy menu and allows to select an option.
+ * @brief prints the Orders menu and allows to select an option.
  *
  * @return selected option
- * @author rmarabini
+ * @author Hugo Torres & Luis Rodríguez
  */
- int ShowFairySubMenu() {
+ int ShowOrdersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -278,7 +250,7 @@ void ShowFairyMenu() {
     return nSelected;
 }
 
-int ShowLuis2() {
+int ShowCostumersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -306,29 +278,29 @@ int ShowLuis2() {
     return nSelected;
 }
 
-void ShowLuis() {
+void ShowCostumersMenu() {
     int nChoice = 0;
 
     do {
-        nChoice = ShowLuis2();
+        nChoice = ShowCostumersSubMenu();
         switch (nChoice) {
             case 1: {
-                PrintZub();
+                PrintFindCostumers();
             }
                 break;
 
             case 2: {
-                PrintBigFatGit();
+                PrintListProducts();
             }
                 break;
 
             case 3: {
-                PrintAliens();
+                PrintBalance();
             }
                 break;
 
             case 4: {
-                printf("Bye Bye\n\n");
+                PrintBack();
             }
                 break;
         }
@@ -336,15 +308,7 @@ void ShowLuis() {
 
 }
 
-
-/**
- * @brief prints Rhyme Mary
- *
- * @return void
- * @author rmarabini
- *
- */
- int PrintMary() {
+ int PrintStock() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -352,7 +316,7 @@ void ShowLuis() {
     SQLRETURN ret2; /* ODBC API return status */
     #define BufferLength 512
     char x[BufferLength] = "\0";
-    char y[BufferLength] = "\0";
+    SQLINTEGER y = 0;
 
     /* CONNECT */
     ret = odbc_connect(&env, &dbc);
@@ -362,36 +326,180 @@ void ShowLuis() {
 
     /* Allocate a statement handle */
     ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select quantityinstock from products where productcode = ?;", SQL_NTS);
     if (!SQL_SUCCEEDED(ret)) {
         odbc_extract_error("", stmt, SQL_HANDLE_ENV);
         return ret;
     }
 
-    printf("Introduzca el código del producto: ");
+    printf("Enter productcode > ");
+
     (void) fflush(stdout);
-    while (fgets(x, (int) sizeof(x), stdin) != NULL) {
-        char query[BufferLength + 500];
-        /* snprintf is not defined if ansi flag is enabled */
-        (void) snprintf(query, (size_t)(BufferLength + 500), "select quantityinstock from products where productcode= %s;", x);
-        printf("%s/n", query); /* OJO - PRINTF PUESTO POR NOSOTROS###################################*/
-        (void) SQLExecDirect(stmt, (SQLCHAR*) query, SQL_NTS); /*ejecuta la consulta en el gestor de base de datos*/
 
-        (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
 
-        /* Loop through the rows in the result-set */
-        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-            printf("y = %s\n", y);
-        }
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &x, 0, NULL);
 
-        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-        if (!SQL_SUCCEEDED(ret2)) {
-            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-           return ret;
-        }
+    (void) SQLExecute(stmt);
 
-        printf("x = ");
-        ret = fflush(stdout);
+    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+
+    printf("\n");
+
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%d\n", y);
     }
+
+    printf("\n");
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    /* free up statemenS10_1678t handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int PrintFind() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    char y[BufferLength] = "\0";
+    char z[BufferLength] = "\0";
+    char k[BufferLength] = "\0";
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select p.productcode, p.productname from products p where p.productname like ? order by p.productcode asc ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter productname > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+    strcpy(k,"%");
+    strcat(k,x);
+    strcat(k,"%");
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &k, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
+
+    printf("\n");
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%s %s\n", y, z);
+    }
+
+    printf("\n");
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int PrintOpen() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    SQLINTEGER x = 0;
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select ordernumber from orders where shippeddate is null order by ordernumber asc ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    (void) fflush(stdout);
+    
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &x, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &x, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%d\n", x);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+
     printf("\n");
     
     /* free up statement handle */
@@ -410,62 +518,448 @@ void ShowLuis() {
     return EXIT_SUCCESS;
 }
 
-/**
- * @brief prints Rhyme Jack
- *
- * @return void
- * @author rmarabini
- *
- */
-void PrintJack() {
-    printf("Jack and jill went up the hill to fetch water\nThen they fell down\n\n\n");
+int PrintRange() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    SQLINTEGER y = 0;
+    char z[BufferLength] = "\0";
+    char p[BufferLength] = "\0";
+    char* fecha1;
+    char* fecha2;
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select o.ordernumber,o.orderdate,o.shippeddate from orders o where o.orderdate>=? and o.orderdate<=? order by o.ordernumber asc ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)){
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter dates (YYYY-MM-DD - YYYY-MM-DD) > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+    printf("\n");
+
+    fecha1=strtok(x," ");
+    fecha2=strtok(NULL," ");
+    fecha2=strtok(NULL,"\0");
+
+    printf("\n");
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha1, 0, NULL);
+    (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha2, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL);
+    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) p, BufferLength , NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%d %s %s\n", y, z, p);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    printf("\n");
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
-/**
- * @brief prints Rhyme LittleBoPee
- *
- * @return void
- * @author rmarabini
- *
- */
-void PrintLittleBoPeep() {
-    printf("Little bo peep had sheep\nthen they came home\n\n\n");
+int PrintDetail() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    char y[BufferLength] = "\0";
+    char z[BufferLength] = "\0";
+    SQLINTEGER t = 0;
+    SQLREAL p = 0;
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select o.orderdate, o.status from orders o where o.ordernumber=? ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter ordernumber > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+    printf("\n");
+    
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%s %s\n", y, z);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.priceeach*od.quantityordered) from orders o join orderdetails od on o.ordernumber=od.ordernumber where o.ordernumber=? ;", SQL_NTS);
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);    
+
+    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &t, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%d\n", t);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select od.productcode, od.quantityordered, od.priceeach from orders o join orderdetails od on o.ordernumber=od.ordernumber where o.ordernumber=? order by od.orderlinenumber ;", SQL_NTS);
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);    
+    
+    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL);
+    (void) SQLBindCol(stmt, 2, SQL_C_SLONG, &t, 0, NULL);
+    (void) SQLBindCol(stmt, 3, SQL_C_FLOAT, &p, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%s %d %.2f\n", y, t, p);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    ret = fflush(stdout);
+    printf("\n");
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
-/**
- * @brief prints fairy tail LittleBoPee
- *
- * @return void
- * @author rmarabini
- *
- */
- void PrintZub() {
-    printf("zub zub zub zub zub zub zub zub\n\n\n");
+int PrintFindCostumers() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    char z[BufferLength] = "\0";
+    char n[BufferLength] = "\0";
+    char a[BufferLength] = "\0";
+    SQLINTEGER f = 0;
+    char k[BufferLength] = "\0";
+
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select c.customername, c.contactfirstname, c.contactlastname, c.customernumber from customers c where c.contactfirstname like ? or c.contactlastname like ? order by c.customernumber asc ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter customer name > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+    strcpy(k,"%");
+    strcat(k,x);
+    strcat(k,"%");
+    printf("\n");
+    
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
+    (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) n, BufferLength , NULL);
+    (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) a, BufferLength , NULL);
+    (void) SQLBindCol(stmt, 4, SQL_C_SLONG, &f, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%d %s %s %s\n", f, z, n, a);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    printf("\n");
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
-/**
- * @brief prints fairy tail LittleBoPee
- *
- * @return void
- * @author rmarabini
- *
- */
-void PrintBigFatGit() {
-    printf("im big and fat and a git\n\n\n");
+int PrintListProducts() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    char y[BufferLength] = "\0";
+    SQLINTEGER z = 0;
+
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select p.productname, sum(od.quantityordered) from customers c join orders o on c.customernumber=o.customernumber join orderdetails od on o.ordernumber=od.ordernumber join products p on p.productcode=od.productcode where c.customernumber=? group by p.productcode order by p.productcode asc ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter customer number > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+    printf("\n");
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+    (void) SQLBindCol(stmt, 2, SQL_C_SLONG, &z, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+        printf("%s %d\n", y, z);
+    }
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    printf("\n");
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
-/**
- * @brief prints fairy tail LittleBoPee
- *
- * @return void
- * @author rmarabini
- *
- */
+int PrintBalance() {
+    SQLHENV env = NULL;
+    SQLHDBC dbc = NULL;
+    SQLHSTMT stmt = NULL; /*CONTENEDOR*/
+    int ret; /* odbc.c */
+    SQLRETURN ret2; /* ODBC API return status */
+    #define BufferLength 512
+    char x[BufferLength] = "\0";
+    SQLREAL y = 0;
+    SQLREAL z = 0;
 
-void PrintAliens() {
-    printf("take us to your leader\n\n\n");
+    /* CONNECT */
+    ret = odbc_connect(&env, &dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate a statement handle */
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
+
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(pa.amount) from customers c join payments pa on pa.customernumber=c.customernumber where c.customernumber=? ;", SQL_NTS);
+    if (!SQL_SUCCEEDED(ret)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_ENV);
+        return ret;
+    }
+
+    printf("Enter customer number > ");
+
+    (void) fflush(stdout);
+
+    fgets(x, (int) sizeof(x), stdin);
+    x[strlen(x)-1] = '\0';
+
+    printf("\n");
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &y, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+
+    SQL_SUCCEEDED(ret = SQLFetch(stmt));
+
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+    
+    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.quantityordered*od.priceeach) from customers c join orders o on c.customernumber=o.customernumber join orderdetails od on od.ordernumber=o.ordernumber join products p on od.productcode=p.productcode where c.customernumber=?;", SQL_NTS);
+
+    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+    (void) SQLExecute(stmt);
+
+    (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &z, 0, NULL);
+
+    /* Loop through the rows in the result-set */
+
+    while(SQL_SUCCEEDED(ret = SQLFetch(stmt))){
+        float p = y - z;
+        printf("Balance = %.2f\n", p);
+    }
+    
+    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+       return ret;
+    }
+
+    ret = fflush(stdout);
+    
+    printf("\n");
+    
+    /* free up statement handle */
+    ret2 = SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (!SQL_SUCCEEDED(ret2)) {
+        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+    }
+
+    /* DISCONNECT */
+    ret = odbc_disconnect(env, dbc);
+    if (!SQL_SUCCEEDED(ret)) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
-     
-     
 
-
+void PrintBack() {
+    printf("Volviendo atrás\n");
+}

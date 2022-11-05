@@ -1,17 +1,39 @@
-CC = gcc -g
-CFLAGS = -Wall -Wextra -pedantic #-ansi
+export PGDATABASE:=classicmodels
+export PGUSER :=alumnodb
+export PGPASSWORD :=alumnodb
+export PGCLIENTENCODING:=LATIN9
+export PGHOST:=localhost
+
+DBNAME =$(PGDATABASE)
+PSQL = psql
+CREATEDB = createdb
+DROPDB = dropdb --if-exists
+PG_DUMP = pg_dump
+PG_RESTORE = pg_restore
+CC = gcc
+CFLAGS = -Wall -Wextra -pedantic -ansi
 LDLIBS = -lodbc
-HEADERS = odbc.h
+EXE = menu
 
-EXE = odbc-connection-test odbc-connection-test-2 odbc-example1 odbc-example2 odbc-example3 odbc-example4 menu
+all: dropdb createdb restore $(EXE)
 
-all : $(EXE)
+createdb:
+	@echo Creando BBDD
+	@$(CREATEDB)
+
+dropdb:
+	@echo Eliminando BBDD
+	@$(DROPDB) $(DBNAME)
+dump:
+	@echo creando dumpfile
+	@$(PG_DUMP) > $(DBNAME).sql
+restore:
+	@echo restore data base
+	@cat $(DBNAME).sql | $(PSQL)
+
+
+$(EXE) : % : %.o odbc.o
 
 clean :
 	rm -f *.o core $(EXE)
 
-$(EXE) : % : %.o odbc.o
-
-%.o: %.c $(HEADERS)
-	@echo Compiling $<...
-	$(CC) $(CFLAGS) -c -o $@ $<
