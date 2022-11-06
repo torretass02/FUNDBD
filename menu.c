@@ -87,7 +87,8 @@ int ShowMainMenu() {
 
     do {
 
-        printf(" (1) Products\n"
+        printf("#### MAIN MENU ####\n"
+               " (1) Products\n"
                " (2) Orders\n"
                " (3) Customers\n"
                " (4) Quit\n\n"
@@ -154,7 +155,8 @@ void ShowProductsMenu() {
 
     do {
 
-        printf(" (1) Stock\n"
+        printf("#### PRODUCT MENU ####\n"
+               " (1) Stock\n"
                " (2) Find\n"
                " (3) Back\n\n");
 
@@ -228,7 +230,8 @@ void ShowOrdersMenu() {
 
     do {
 
-        printf(" (1) Open\n"
+        printf("#### ORDERS MENU ####\n"
+               " (1) Open\n"
                " (2) Range\n"
                " (3) Detail\n"
                " (4) Back\n\n");
@@ -256,7 +259,8 @@ int ShowCostumersSubMenu() {
 
     do {
 
-        printf(" (1) Find\n"
+        printf("#### COSTUMERS MENU ####\n"
+               " (1) Find\n"
                " (2) List Products\n"
                " (3) Balance\n"
                " (4) Back\n\n");
@@ -961,5 +965,5 @@ int PrintBalance() {
 }
 
 void PrintBack() {
-    printf("Volviendo atrás\n");
+    printf("<<<<<<< Volviendo atrás <<<<<<<\n\n");
 }
