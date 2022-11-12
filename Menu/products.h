@@ -1,6 +1,5 @@
 #ifndef PRODUCTS_H
 #define PRODUCTS_H
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +8,10 @@
 #include "odbc.h"
 
 
-void ProductsMenu();
+static void ShowProductsMenu();
+static int ShowProductsSubMenu();
+static int PrintStock();
+static int PrintFind();
+static void PrintBack();
 
 #endif

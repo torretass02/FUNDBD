@@ -120,17 +120,19 @@ int ShowMainMenu() {
  */
 void ShowProductsMenu() {
     int nChoice = 0;
+    int r = 0;
+
     do {
         nChoice = ShowProductsSubMenu();
         switch (nChoice) {
 
             case 1: {
-                PrintStock();
+                r = PrintStock();
             }
                 break;
 
             case 2: {
-                PrintFind();
+                r = PrintFind();
             }
                 break;
 
@@ -139,7 +141,7 @@ void ShowProductsMenu() {
             }
                 break;
         }
-    } while (nChoice != 3);
+    } while (nChoice != 3 && r == EXIT_SUCCESS);
 
 }
 
@@ -190,22 +192,23 @@ void ShowProductsMenu() {
  */
 void ShowOrdersMenu() {
     int nChoice = 0;
+    int r = 0;
 
     do {
         nChoice = ShowOrdersSubMenu();
         switch (nChoice) {
             case 1: {
-                PrintOpen();
+                r = PrintOpen();
             }
                 break;
 
             case 2: {
-                PrintRange();
+                r = PrintRange();
             }
                 break;
 
             case 3: {
-                PrintDetail();
+                r = PrintDetail();
             }
                 break;
 
@@ -214,7 +217,7 @@ void ShowOrdersMenu() {
             }
                 break;
         }
-    } while (nChoice != 4);
+    } while (nChoice !=4 && r == EXIT_SUCCESS);
 
 }
 
@@ -229,7 +232,6 @@ void ShowOrdersMenu() {
     char buf[16];
 
     do {
-
         printf("#### ORDERS MENU ####\n"
                " (1) Open\n"
                " (2) Range\n"
@@ -284,22 +286,23 @@ int ShowCostumersSubMenu() {
 
 void ShowCostumersMenu() {
     int nChoice = 0;
+    int r = 0;
 
     do {
         nChoice = ShowCostumersSubMenu();
         switch (nChoice) {
             case 1: {
-                PrintFindCostumers();
+                r = PrintFindCostumers();
             }
                 break;
 
             case 2: {
-                PrintListProducts();
+                r = PrintListProducts();
             }
                 break;
 
             case 3: {
-                PrintBalance();
+                r = PrintBalance();
             }
                 break;
 
@@ -308,7 +311,7 @@ void ShowCostumersMenu() {
             }
                 break;
         }
-    } while (nChoice != 4);
+    } while (nChoice != 4 && r == EXIT_SUCCESS);
 
 }
 
@@ -341,27 +344,28 @@ void ShowCostumersMenu() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
 
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &x, 0, NULL);
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &x, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL); /*asocia columna1 del contenedor stmt a la variable y*/
 
-    printf("\n");
+        printf("\n");
 
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%d\n", y);
-    }
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%d\n", y);
+        }
 
-    printf("\n");
+        printf("\n");
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+        }
     }
 
     ret = fflush(stdout);
@@ -413,32 +417,33 @@ int PrintFind() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
-    strcpy(k,"%");
-    strcat(k,x);
-    strcat(k,"%");
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
+        strcpy(k,"%");
+        strcat(k,x);
+        strcat(k,"%");
 
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &k, 0, NULL);
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, &k, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
-    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
 
-    printf("\n");
+        printf("\n");
 
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%s %s\n", y, z);
-    }
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%s %s\n", y, z);
+        }
 
-    printf("\n");
+        printf("\n");
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-        return ret;
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+            return ret;
+        }
     }
 
     ret = fflush(stdout);
@@ -555,34 +560,35 @@ int PrintRange() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
-    printf("\n");
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
+        printf("\n");
 
-    fecha1=strtok(x," ");
-    fecha2=strtok(NULL," ");
-    fecha2=strtok(NULL,"\0");
+        fecha1=strtok(x," ");
+        fecha2=strtok(NULL," ");
+        fecha2=strtok(NULL,"\0");
 
-    printf("\n");
+        printf("\n");
 
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha1, 0, NULL);
-    (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha2, 0, NULL);
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha1, 0, NULL);
+        (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, fecha2, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL);
-    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
-    (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) p, BufferLength , NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &y, 0, NULL);
+        (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) p, BufferLength , NULL);
 
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%d %s %s\n", y, z, p);
-    }
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%d %s %s\n", y, z, p);
+        }
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+        }
     }
 
     ret = fflush(stdout);
@@ -637,47 +643,47 @@ int PrintDetail() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
-    printf("\n");
-    
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
+        printf("\n");
+        
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
-    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL);
 
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%s %s\n", y, z);
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%s %s\n", y, z);
+        }
+
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+            return ret;
+        }
+
+        ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.priceeach*od.quantityordered) from orders o join orderdetails od on o.ordernumber=od.ordernumber where o.ordernumber=? ;", SQL_NTS);
+
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+
+        (void) SQLExecute(stmt);    
+
+        (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &t, 0, NULL);
+
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%d\n", t);
+        }
+
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+            return ret;
+        }
     }
-
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-        return ret;
-    }
-
-    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.priceeach*od.quantityordered) from orders o join orderdetails od on o.ordernumber=od.ordernumber where o.ordernumber=? ;", SQL_NTS);
-
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
-
-    (void) SQLExecute(stmt);    
-
-    (void) SQLBindCol(stmt, 1, SQL_C_SLONG, &t, 0, NULL);
-
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%d\n", t);
-    }
-
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-        return ret;
-    }
-
 
     ret = SQLPrepare(stmt, (SQLCHAR*) "select od.productcode, od.quantityordered, od.priceeach from orders o join orderdetails od on o.ordernumber=od.ordernumber where o.ordernumber=? order by od.orderlinenumber ;", SQL_NTS);
 
@@ -752,32 +758,33 @@ int PrintFindCostumers() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
-    strcpy(k,"%");
-    strcat(k,x);
-    strcat(k,"%");
-    printf("\n");
-    
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
-    (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
+        strcpy(k,"%");
+        strcat(k,x);
+        strcat(k,"%");
+        printf("\n");
+        
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
+        (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, k, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
-    (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) n, BufferLength , NULL);
-    (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) a, BufferLength , NULL);
-    (void) SQLBindCol(stmt, 4, SQL_C_SLONG, &f, 0, NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) z, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 2, SQL_C_CHAR, (SQLCHAR*) n, BufferLength , NULL);
+        (void) SQLBindCol(stmt, 3, SQL_C_CHAR, (SQLCHAR*) a, BufferLength , NULL);
+        (void) SQLBindCol(stmt, 4, SQL_C_SLONG, &f, 0, NULL);
 
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%d %s %s %s\n", f, z, n, a);
-    }
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%d %s %s %s\n", f, z, n, a);
+        }
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+        }
     }
 
     ret = fflush(stdout);
@@ -830,26 +837,27 @@ int PrintListProducts() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
-    printf("\n");
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
+        printf("\n");
 
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
-    (void) SQLBindCol(stmt, 2, SQL_C_SLONG, &z, 0, NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_CHAR, (SQLCHAR*) y, BufferLength , NULL); /*asocia columna1 del contenedor stmt a la variable y*/
+        (void) SQLBindCol(stmt, 2, SQL_C_SLONG, &z, 0, NULL);
 
-    /* Loop through the rows in the result-set */
-    while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
-        printf("%s %d\n", y, z);
-    }
+        /* Loop through the rows in the result-set */
+        while (SQL_SUCCEEDED(ret = SQLFetch(stmt))) {/*imprimo el valor que tenga en ese momento la variable y*/
+            printf("%s %d\n", y, z);
+        }
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+        }
     }
 
     ret = fflush(stdout);
@@ -902,27 +910,28 @@ int PrintBalance() {
 
     (void) fflush(stdout);
 
-    fgets(x, (int) sizeof(x), stdin);
-    x[strlen(x)-1] = '\0';
+    if(fgets(x, (int) sizeof(x), stdin) != NULL){
+        x[strlen(x)-1] = '\0';
 
-    printf("\n");
+        printf("\n");
 
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+        (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
 
-    (void) SQLExecute(stmt);
+        (void) SQLExecute(stmt);
 
-    (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &y, 0, NULL);
+        (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &y, 0, NULL);
 
-    /* Loop through the rows in the result-set */
+        /* Loop through the rows in the result-set */
 
-    SQL_SUCCEEDED(ret = SQLFetch(stmt));
+        SQL_SUCCEEDED(ret = SQLFetch(stmt));
 
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
-    }
-    
+        ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
+        if (!SQL_SUCCEEDED(ret2)) {
+            odbc_extract_error("", stmt, SQL_HANDLE_STMT);
+        return ret;
+        }
+    }    
+
     ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.quantityordered*od.priceeach) from customers c join orders o on c.customernumber=o.customernumber join orderdetails od on od.ordernumber=o.ordernumber join products p on od.productcode=p.productcode where c.customernumber=?;", SQL_NTS);
 
     (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);

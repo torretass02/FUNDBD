@@ -3,7 +3,13 @@
 #include "odbc.h"
 
 
-
+/**
+ * @brief REPORT OF THE MOST RECENT ERROR USING HANDLE handle
+ * @param fn: Error message
+ * @param handle: handle (Handles are opaque, 32-bit values that identify a particular item)
+ * @param type: type of handle (environment, connection, statement)
+ * @author edat
+ */
 void odbc_extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type) {
     #define BufferLength 256
     SQLSMALLINT i = 0;
@@ -28,7 +34,18 @@ void odbc_extract_error(char *fn, SQLHANDLE handle, SQLSMALLINT type) {
 }
 
 
-
+/**
+ * @brief STANDARD CONNECTION PROCEDURE
+ *
+ * fills the environment and a connection handlea env and dbc and
+ * tries to connect to the database defined
+ * by CONNECTION_PARS (see header file)
+ *
+ * @param env environment handle
+ * @param dbc connection handle
+ * @return SQL_SUCCESS, SQL_SUCCESS_WITH_INFO, SQL_INVALID_HANDLE, or SQL_ERROR
+ * @author edat
+ */
 int odbc_connect(SQLHENV* env, SQLHDBC* dbc) {
     SQLRETURN ret;
 
@@ -65,6 +82,16 @@ int odbc_connect(SQLHENV* env, SQLHDBC* dbc) {
     return ret;
 }
 
+/**
+ * @brief STANDARD DISCONNECTION PROCEDURE
+ *
+ * closes the connection associated with dbc
+ * and free env and dbc handles
+ *
+ * @param env environment handle
+ * @param dbc connection handle
+ * @return
+ */
 
 int odbc_disconnect(SQLHENV env, SQLHDBC dbc) {
     SQLRETURN ret;
