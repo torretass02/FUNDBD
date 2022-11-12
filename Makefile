@@ -32,7 +32,7 @@ restore:
 	@cat $(DBNAME).sql | $(PSQL)
 
 
-$(EXE) : % : %.o odbc.o
+$(EXE) : % : %.o odbc.o products.o orders.o costumers.o
 
 clean :
 	rm -f *.o core $(EXE)

@@ -1,5 +1,6 @@
 #ifndef PRODUCTS_H
 #define PRODUCTS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,11 +8,9 @@
 #include <sqlext.h>
 #include "odbc.h"
 
-
-static void ShowProductsMenu();
-static int ShowProductsSubMenu();
-static int PrintStock();
-static int PrintFind();
-static void PrintBack();
+void ShowProductsMenu();
+int ShowProductsSubMenu();
+int PrintStock();
+int PrintFind();
 
 #endif

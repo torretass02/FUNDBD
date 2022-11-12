@@ -6,50 +6,13 @@
 #include "odbc.h"
 #include "products.h"
 
-
-/**
- * @brief Shows and processes the Products menu.
- *
- * This function implements a loop that prints the Products
- * menu, analyze the user selection and prints
- * the selected Products
- * @return void
- * @author Hugo Torres & Luis Rodríguez
- */
-static void ShowProductsMenu() {
-    int nChoice = 0;
-    int r = 0;
-
-    do {
-        nChoice = ShowProductsSubMenu();
-        switch (nChoice) {
-
-            case 1: {
-                r = PrintStock();
-            }
-                break;
-
-            case 2: {
-                r = PrintFind();
-            }
-                break;
-
-            case 3: {
-                PrintBack();
-            }
-                break;
-        }
-    } while (nChoice != 3 && r == EXIT_SUCCESS);
-
-}
-
 /**
  * @brief prints Products menu and allows to select an option.
  *
  * @return selected option
  * @author Hugo Torres & Luis Rodríguez
  */
-static int ShowProductsSubMenu() {
+int ShowProductsSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -78,7 +41,43 @@ static int ShowProductsSubMenu() {
     return nSelected;
 }
 
-static int PrintStock() {
+/**
+ * @brief Shows and processes the Products menu.
+ *
+ * This function implements a loop that prints the Products
+ * menu, analyze the user selection and prints
+ * the selected Products
+ * @return void
+ * @author Hugo Torres & Luis Rodríguez
+ */
+void ShowProductsMenu() {
+    int nChoice = 0;
+    int r = 0;
+
+    do {
+        nChoice = ShowProductsSubMenu();
+        switch (nChoice) {
+
+            case 1: {
+                r = PrintStock();
+            }
+                break;
+
+            case 2: {
+                r = PrintFind();
+            }
+                break;
+
+            case 3: {
+                printf("<<<<<<< Volviendo atrás <<<<<<<\n\n");
+            }
+                break;
+        }
+    } while (nChoice != 3 && r == EXIT_SUCCESS);
+
+}
+
+int PrintStock() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -149,7 +148,7 @@ static int PrintStock() {
     return EXIT_SUCCESS;
 }
 
-static int PrintFind() {
+int PrintFind() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -225,8 +224,4 @@ static int PrintFind() {
     }
 
     return EXIT_SUCCESS;
-}
-
-static void PrintBack() {
-    printf("<<<<<<< Volviendo atrás <<<<<<<\n\n");
 }

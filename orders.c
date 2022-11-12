@@ -39,7 +39,7 @@ void ShowOrdersMenu() {
                 break;
 
             case 4: {
-                PrintBack();
+                printf("<<<<<<< Volviendo atrás <<<<<<<\n\n");
             }
                 break;
         }
@@ -53,7 +53,7 @@ void ShowOrdersMenu() {
  * @return selected option
  * @author Hugo Torres & Luis Rodríguez
  */
-static int ShowOrdersSubMenu() {
+int ShowOrdersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -81,7 +81,7 @@ static int ShowOrdersSubMenu() {
     return nSelected;
 }
 
-static int PrintOpen() {
+int PrintOpen() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -144,7 +144,7 @@ static int PrintOpen() {
     return EXIT_SUCCESS;
 }
 
-static int PrintRange() {
+int PrintRange() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -228,7 +228,7 @@ static int PrintRange() {
     return EXIT_SUCCESS;
 }
 
-static int PrintDetail() {
+int PrintDetail() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/

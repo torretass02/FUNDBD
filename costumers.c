@@ -5,8 +5,9 @@
 #include <sqlext.h>
 #include "odbc.h"
 #include "costumers.h"
+#include "products.h"
 
-static int ShowCostumersSubMenu() {
+int ShowCostumersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -58,7 +59,7 @@ void ShowCostumersMenu() {
                 break;
 
             case 4: {
-                PrintBack();
+                printf("<<<<<<< Volviendo atrás <<<<<<<\n\n");
             }
                 break;
         }
@@ -66,7 +67,7 @@ void ShowCostumersMenu() {
 
 }
 
-static int PrintFindCostumers() {
+int PrintFindCostumers() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -148,7 +149,7 @@ static int PrintFindCostumers() {
     return EXIT_SUCCESS;
 }
 
-static int PrintListProducts() {
+int PrintListProducts() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -221,7 +222,7 @@ static int PrintListProducts() {
     return EXIT_SUCCESS;
 }
 
-static int PrintBalance() {
+int PrintBalance() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/

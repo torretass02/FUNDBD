@@ -10,6 +10,7 @@ send -- "2\r"
 expect "Enter a number that corresponds to your choice > "
 send -- "1\r"
 
+
 # 7933 -> stock for product with id = S10_1678
 expect "10167"
 expect "10248"
