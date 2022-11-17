@@ -7,7 +7,12 @@
 #include "costumers.h"
 #include "products.h"
 
-int ShowCostumersSubMenu() {
+static int ShowCostumersSubMenu();
+static int PrintFindCostumers();
+static int PrintListProducts();
+static int PrintBalance();
+
+static int ShowCostumersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -67,7 +72,7 @@ void ShowCostumersMenu() {
 
 }
 
-int PrintFindCostumers() {
+static int PrintFindCostumers() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -149,7 +154,7 @@ int PrintFindCostumers() {
     return EXIT_SUCCESS;
 }
 
-int PrintListProducts() {
+static int PrintListProducts() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -220,9 +225,10 @@ int PrintListProducts() {
     }
 
     return EXIT_SUCCESS;
+
 }
 
-int PrintBalance() {
+static int PrintBalance() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -231,7 +237,6 @@ int PrintBalance() {
     #define BufferLength 512
     char x[BufferLength] = "\0";
     SQLREAL y = 0;
-    SQLREAL z = 0;
 
     /* CONNECT */
     ret = odbc_connect(&env, &dbc);
@@ -242,7 +247,7 @@ int PrintBalance() {
     /* Allocate a statement handle */
     ret = SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt); /*MALLOC*/
 
-    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(pa.amount) from customers c join payments pa on pa.customernumber=c.customernumber where c.customernumber=? ;", SQL_NTS);
+    ret = SQLPrepare(stmt,(SQLCHAR*) "select((select sum(pa.amount) from customers c join payments pa on pa.customernumber=c.customernumber where c.customernumber=?) - (select sum(od.quantityordered*od.priceeach) from customers c join orders o on c.customernumber=o.customernumber join orderdetails od on od.ordernumber=o.ordernumber join products p on od.productcode=p.productcode where c.customernumber=?));", SQL_NTS);
     if (!SQL_SUCCEEDED(ret)) {
         odbc_extract_error("", stmt, SQL_HANDLE_ENV);
         return ret;
@@ -258,14 +263,15 @@ int PrintBalance() {
         printf("\n");
 
         (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
+        (void)SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
 
         (void) SQLExecute(stmt);
 
         (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &y, 0, NULL);
 
-        /* Loop through the rows in the result-set */
-
-        SQL_SUCCEEDED(ret = SQLFetch(stmt));
+        while(SQL_SUCCEEDED(ret = SQLFetch(stmt))){
+            printf("Balance = %.2f\n", y);
+        }   
 
         ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
         if (!SQL_SUCCEEDED(ret2)) {
@@ -274,28 +280,9 @@ int PrintBalance() {
         }
     }    
 
-    ret = SQLPrepare(stmt, (SQLCHAR*) "select sum(od.quantityordered*od.priceeach) from customers c join orders o on c.customernumber=o.customernumber join orderdetails od on od.ordernumber=o.ordernumber join products p on od.productcode=p.productcode where c.customernumber=?;", SQL_NTS);
-
-    (void)SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0, x, 0, NULL);
-
-    (void) SQLExecute(stmt);
-
-    (void) SQLBindCol(stmt, 1, SQL_C_FLOAT, &z, 0, NULL);
 
     /* Loop through the rows in the result-set */
 
-    while(SQL_SUCCEEDED(ret = SQLFetch(stmt))){
-        float p = y - z;
-        printf("Balance = %.2f\n", p);
-    }
-    
-    ret2 = SQLCloseCursor(stmt);/*OJO - LIMPIA EL CONTENEDOR STMT######################*/
-    if (!SQL_SUCCEEDED(ret2)) {
-        odbc_extract_error("", stmt, SQL_HANDLE_STMT);
-       return ret;
-    }
-
-    ret = fflush(stdout);
     
     printf("\n");
     

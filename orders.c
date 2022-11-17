@@ -6,6 +6,11 @@
 #include "odbc.h"
 #include "orders.h"
 
+static int ShowOrdersSubMenu();
+static int PrintOpen();
+static int PrintRange();
+static int PrintDetail();
+
 /**
  * @brief Shows and processes the Orders menu.
  *
@@ -53,7 +58,7 @@ void ShowOrdersMenu() {
  * @return selected option
  * @author Hugo Torres & Luis Rodríguez
  */
-int ShowOrdersSubMenu() {
+static int ShowOrdersSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -81,7 +86,7 @@ int ShowOrdersSubMenu() {
     return nSelected;
 }
 
-int PrintOpen() {
+static int PrintOpen() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -144,7 +149,7 @@ int PrintOpen() {
     return EXIT_SUCCESS;
 }
 
-int PrintRange() {
+static int PrintRange() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -228,7 +233,7 @@ int PrintRange() {
     return EXIT_SUCCESS;
 }
 
-int PrintDetail() {
+static int PrintDetail() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/

@@ -8,7 +8,7 @@
 #include "orders.h"
 #include "costumers.h"
 
-int ShowMainMenu();
+static int ShowMainMenu();
 
 /**
  * @brief prints main menu and allows to select an option.
@@ -17,7 +17,7 @@ int ShowMainMenu();
  * @return selected entry in the menu
  * @author Hugo Torres & Luis Rodríguez
  */
-int ShowMainMenu() {
+static int ShowMainMenu() {
     int nSelected = 0;
     char buf[16]; /* buffer for reading user input
                      in theory we only need 1 char

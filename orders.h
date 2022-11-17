@@ -9,9 +9,5 @@
 #include "odbc.h"
 
 void ShowOrdersMenu();
-int ShowOrdersSubMenu();
-int PrintOpen();
-int PrintRange();
-int PrintDetail();
 
 #endif

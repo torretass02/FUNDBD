@@ -6,13 +6,17 @@
 #include "odbc.h"
 #include "products.h"
 
+static int ShowProductsSubMenu();
+static int PrintStock();
+static int PrintFind();
+
 /**
  * @brief prints Products menu and allows to select an option.
  *
  * @return selected option
  * @author Hugo Torres & Luis Rodríguez
  */
-int ShowProductsSubMenu() {
+static int ShowProductsSubMenu() {
     int nSelected = 0;
     char buf[16];
 
@@ -77,7 +81,7 @@ void ShowProductsMenu() {
 
 }
 
-int PrintStock() {
+static int PrintStock() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
@@ -148,7 +152,7 @@ int PrintStock() {
     return EXIT_SUCCESS;
 }
 
-int PrintFind() {
+static int PrintFind() {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     SQLHSTMT stmt = NULL; /*CONTENEDOR*/
