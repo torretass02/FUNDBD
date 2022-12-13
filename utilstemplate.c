@@ -40,7 +40,9 @@ bool createIndex(const char *indexName) {
 void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id, char side){
     char esp[100]="\0";
     Node node;
-    int i;  
+    int i;
+
+    if(!indexFileHandler||_level==level||node_id==-1) return;
 
     if(side==1){
         fseek(indexFileHandler, INDEX_HEADER_SIZE + (sizeof(Node)*node.right),SEEK_SET);
@@ -64,24 +66,28 @@ void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id
         fprintf(stdout,"\n");
     }
 
+    _level = _level+1;
+
+    printnode(_level, level, indexFileHandler, node.left, 0);
+    printnode(_level, level, indexFileHandler, node.right, 1);
 
     return;
 }
 
 void printTree(size_t level, const char * indexName){
-    FILE* f=NULL;
     Node node;
-    int max,parent;
+    FILE* f=NULL;
+    int max,p;
 
     f = fopen(indexName,"rb");
     if(!f) return;
 
     max=level-1;
     fseek(f,0,SEEK_SET);
-    fread(&parent, sizeof(int), 1, f);
-    fseek(f,8+(sizeof(Node)*parent),SEEK_SET);
+    fread(&p, sizeof(int), 1, f);
+    fseek(f,8+(sizeof(Node)*p),SEEK_SET);
     fread(&node, sizeof(Node), 1, f);
-    fprintf(stdout,"%s (%d): %d",node.book_id,parent,node.offset);
+    fprintf(stdout,"%s (%d): %d",node.book_id,p,node.offset);
     fprintf(stdout,"\n");
 
     if(max==0){
@@ -97,7 +103,41 @@ void printTree(size_t level, const char * indexName){
 }
 
 bool findKey(const char * book_id, const char *indexName, int * nodeIDOrDataOffset){
-     return true;
+    FILE* f=NULL;
+    Node node;
+    int p,cmp,aux;
+
+    if(!book_id||!indexName||!nodeIDOrDataOffset) return false;
+
+    f=fopen(indexName,"rb");
+    if(!f) return false;
+
+    fseek(f,0,SEEK_SET);
+    fread(&p,sizeof(int),1,f);
+
+    if(p==-1) {
+        fclose(f);
+        return false;
+    }
+
+    while(!feof(f)&&p!=-1){
+        aux=p;
+        fseek(f,8+(sizeof(Node)*p),SEEK_SET);
+        fread(&node, sizeof(Node), 1, f);
+        cmp=strcmp(book_id,node.book_id);
+        if(cmp==0){
+            *nodeIDOrDataOffset=node.offset;
+            fclose(f);
+            return true;
+        }
+        else if(cmp<0) p=node.left;
+        else if(cmp>0) p=node.right;
+    }
+
+    *nodeIDOrDataOffset=aux;
+    fclose(f);
+
+    return false;
 }
 
 bool addIndexEntry(char * book_id,  int bookOffset, char const * indexName) {
