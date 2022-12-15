@@ -15,8 +15,7 @@
 
 #include "tester.h"
 
-void checkReplaceExtensionByIdx(const char * tableName,
-                                const char * indexName);
+void checkReplaceExtensionByIdx(const char * tableName,const char * indexName);
 void checkCreateIndex(const char * indexName);
 void checkCreateTable(const char * tableName);
 

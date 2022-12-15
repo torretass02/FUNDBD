@@ -1,1 +1,0 @@
-/home/hugo/Documentos/2022/SOLUS/checkPrint.c
