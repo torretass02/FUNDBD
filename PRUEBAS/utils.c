@@ -5,27 +5,23 @@
 
 int no_deleted_registers = NO_DELETED_REGISTERS;
 
-
-
-void replaceExtensionByIdx(const char *fileName, char * indexName){
-  char s[5]=".idx";
+void replaceExtensionByIdx(const char *fileName, char * indexName) {
+    char cad[5]=".idx";
 
     if(!fileName||!indexName) return;
 
     strcpy(indexName,fileName);
     indexName=strtok(indexName,".");
-    strcat(indexName,s);
+    strcat(indexName,cad);
     return;
 }
 
-
-
 bool createTable(const char * tableName) {
-  FILE* f = NULL;
+    FILE* f = NULL;
 
     if(!tableName) return false;
 
-    f=fopen(tableName,"wb");
+    f=fopen(tableName,"b");
     if(!f) return false;
 
     fwrite(&no_deleted_registers,sizeof(int),1,f);
@@ -33,14 +29,12 @@ bool createTable(const char * tableName) {
     return true;
 }
 
-
-
-bool createIndex(const char *indexName){
-  FILE* f = NULL;
+bool createIndex(const char *indexName) {
+    FILE* f = NULL;
 
     if(!indexName) return false;
 
-    f=fopen(indexName,"wb");
+    f=fopen(indexName,"b");
     if(!f) return false;
 
     fwrite(&no_deleted_registers,sizeof(int),1,f);
@@ -51,86 +45,79 @@ bool createIndex(const char *indexName){
     return true;
 }
 
-void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id, char side) {
-  char esp[50]="\0";
-  size_t i;
-  char l = 'l';
-  char r = 'r';
-  Node node;
+void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id, char side){
+    char esp[100]="\0";
+    Node node;
+    size_t i;
 
-  if(_level==level||!indexFileHandler||node_id==-1||!side) return;
+    if(!indexFileHandler||_level==level||node_id==-1) return;
 
-  fseek(indexFileHandler, INDEX_HEADER_SIZE+sizeof(Node)*node_id, SEEK_SET);
-  fread(&node, sizeof(Node), 1, indexFileHandler);
+    fseek(indexFileHandler, INDEX_HEADER_SIZE + (sizeof(Node)*node_id),SEEK_SET);
+    fread(&node, sizeof(Node), 1, indexFileHandler);
 
-  if(side==l){
-
-    for(i=0;i<=_level;i++){
-      esp[i]=' ';
-    }
+    if(side==1){
+        fseek(indexFileHandler, INDEX_HEADER_SIZE + (sizeof(Node)*node.right),SEEK_SET);
+        fread(&node, sizeof(Node), 1, indexFileHandler);  
     
-    fprintf(stdout,"%sl %s (%d): %d",esp,node.book_id,node_id,node.offset);
-    fprintf(stdout,"\n");
+        for(i=0;i<=_level;i++){
+            esp[i]=' ';
+        }
+        fprintf(stdout,"%sr %s (%d): %d", esp, node.book_id, node_id, node.offset);
+        fprintf(stdout,"\n");
+    } 
 
-  }
-
-  if(side==r){
-
-    for(i=0;i<=_level;i++){
-      esp[i]=' ';
+    if(side==0){
+        fseek(indexFileHandler, INDEX_HEADER_SIZE +(sizeof(Node)*node.left),SEEK_SET);
+        fread(&node, sizeof(Node), 1, indexFileHandler); 
+        
+        for(i=0;i<=_level;i++){
+            esp[i]=' ';
+        } 
+        fprintf(stdout,"%sl %s (%d): %d", esp, node.book_id, node_id, node.offset);
+        fprintf(stdout,"\n");
     }
 
-    fprintf(stdout,"%sr %s (%d): %d",esp,node.book_id,node_id,node.offset);
-    fprintf(stdout,"\n");
-  }
+    _level = _level+1;
 
-  _level++;
-  printnode(_level, level, indexFileHandler, node.left, l);
-  printnode(_level, level, indexFileHandler, node.right, r);
+    printnode(_level, level, indexFileHandler, node.left, 0);
+    printnode(_level, level, indexFileHandler, node.right, 1);
 
-  return;
+    return;
 }
-
 
 void printTree(size_t level, const char * indexName){
-  FILE* f=NULL;
-  Node node;
-  int aux,max,parent;
-  char l = 'l';
-  char r = 'r';
+    Node node;
+    FILE* f=NULL;
+    int max,p;
+    char l = 'l';
+    char r = 'r';
 
-  if(!indexName||level<=0) return;
+    if(!indexName||level<=0) return;
+    f = fopen(indexName,"rb");
+    if(!f) return;
 
-  f=fopen(indexName,"rb");
-  if(!f) return;
+    max=level-1;
+    fseek(f,0,SEEK_SET);
+    fread(&p, sizeof(int), 1, f);
+    fseek(f,INDEX_HEADER_SIZE+(sizeof(Node)*p),SEEK_SET);
+    fread(&node, sizeof(Node), 1, f);
+    fprintf(stdout,"%s (%d): %d",node.book_id,p,node.offset);
+    fprintf(stdout,"\n");
 
-  /*profundidad hasta la que queremos leer*/
-  max=level-1;
-  /*id del nodo padre*/
-  fseek(f,0,SEEK_SET);
-  fread(&parent, sizeof(int), 1, f);
-  /*posición del nodo padre*/
-  aux=8+(sizeof(Node)*parent);
-  fseek(f,aux,SEEK_SET); /*señalar desde donde queremos leer*/
-  fread(&node, sizeof(Node), 1, f);
-  fprintf(stdout,"%s (%d): %d",node.book_id,parent,node.offset);
-  fprintf(stdout,"\n");
+    if(max==0){
+        fclose(f);
+        return;
+    }
 
-  if(max==0){
+    printnode(max,max,f,node.left,l);
+    printnode(max,max,f,node.right,r);
+
     fclose(f);
     return;
-  }
-
-  printnode(0, max, f, node.left, l);
-  printnode(0, max, f, node.right, r);
-
-  fclose(f);
-  return;
 }
 
-
-bool findKey(const char * book_id, const char *indexName, int * nodeIDOrDataOffset) {
-  Node node;
+bool findKey(const char * book_id, const char *indexName, int * nodeIDOrDataOffset){
+    Node node;
     FILE* f=NULL;
     int p,equal,aux;
 
@@ -167,9 +154,68 @@ bool findKey(const char * book_id, const char *indexName, int * nodeIDOrDataOffs
     fclose(f);
 
     return false;
- }
+}
 
- bool addIndexEntryRec(FILE* f, Node node, char * book_id, int bookOffset, int del, int id, int type){
+bool addTableEntry(Book * book, const char * dataName, const char * indexName) {
+    Node node;
+    FILE* f=NULL;
+    int l,del;
+    int offset=0;
+    int aux=0;
+
+    if(findKey(book->book_id,indexName,&offset)==true) return false;
+
+    if(!book||!dataName||!indexName) return false;
+
+    f=fopen(dataName,"r+b");
+    if(!f) return false;
+
+    fseek(f,0,SEEK_SET);
+    fread(&del,sizeof(int),1,f);
+
+    if(del==no_deleted_registers){
+        fseek(f,0,SEEK_END);
+        l=strlen(book->title);
+        fwrite(&(book->book_id),PK_SIZE,1,f);
+        fwrite(&l,sizeof(int),1,f);
+        fwrite(book->title,l,1,f);
+        fclose(f);
+    }
+    else{
+        fseek(f,4+del,SEEK_SET);
+        l=strlen(book->title);
+        fwrite(&(book->book_id),PK_SIZE,1,f);
+        fwrite(&l,sizeof(int),1,f);
+        fwrite(book->title,l,1,f);
+        fseek(f,0,SEEK_SET);
+        fwrite(&no_deleted_registers,sizeof(int),1,f);
+        fclose(f);
+    }
+
+    f=fopen(indexName,"rb");
+    if(!f) return false;
+
+    while(!feof(f)){
+        node.offset=0;
+        fseek(f,8+aux,SEEK_SET);
+        fread(&node,sizeof(Node),1,f);
+
+        if(node.offset>offset){
+            offset=node.offset;
+        }
+
+        aux+=sizeof(Node);
+    }
+
+    fclose(f);
+    offset+=PK_SIZE+1+l+sizeof(int);
+
+    if(addIndexEntry(book->book_id,offset,indexName)==false) return false;
+
+    return true;
+}
+
+bool addIndexEntryRec(FILE* f, Node node, char * book_id, int bookOffset, int del, int id, int type){
     int p,equal;
     int root=0;
 
@@ -257,9 +303,8 @@ bool findKey(const char * book_id, const char *indexName, int * nodeIDOrDataOffs
     return true;
  }
 
-
 bool addIndexEntry(char * book_id,  int bookOffset, char const * indexName) {
-   Node node;
+    Node node;
     FILE* f=NULL;
     int flag=0;
     int root=0;
@@ -327,65 +372,5 @@ bool addIndexEntry(char * book_id,  int bookOffset, char const * indexName) {
     }
 
     fclose(f);
-    return true;
- }
-
-
-bool addTableEntry(Book * book, const char * dataName, const char * indexName) {
-  Node node;
-    FILE* f=NULL;
-    int l,del;
-    int offset=0;
-    int aux=0;
-
-    if(findKey(book->book_id,indexName,&offset)==true) return false;
-
-    if(!book||!dataName||!indexName) return false;
-
-    f=fopen(dataName,"r+b");
-    if(!f) return false;
-
-    fseek(f,0,SEEK_SET);
-    fread(&del,sizeof(int),1,f);
-
-    if(del==no_deleted_registers){
-        fseek(f,0,SEEK_END);
-        l=strlen(book->title);
-        fwrite(&(book->book_id),PK_SIZE,1,f);
-        fwrite(&l,sizeof(int),1,f);
-        fwrite(book->title,l,1,f);
-        fclose(f);
-    }
-    else{
-        fseek(f,4+del,SEEK_SET);
-        l=strlen(book->title);
-        fwrite(&(book->book_id),PK_SIZE,1,f);
-        fwrite(&l,sizeof(int),1,f);
-        fwrite(book->title,l,1,f);
-        fseek(f,0,SEEK_SET);
-        fwrite(&no_deleted_registers,sizeof(int),1,f);
-        fclose(f);
-    }
-
-    f=fopen(indexName,"rb");
-    if(!f) return false;
-
-    while(!feof(f)){
-        node.offset=0;
-        fseek(f,8+aux,SEEK_SET);
-        fread(&node,sizeof(Node),1,f);
-
-        if(node.offset>offset){
-            offset=node.offset;
-        }
-
-        aux+=sizeof(Node);
-    }
-
-    fclose(f);
-    offset+=PK_SIZE+1+l+sizeof(int);
-
-    if(addIndexEntry(book->book_id,offset,indexName)==false) return false;
-
     return true;
 }

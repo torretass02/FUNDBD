@@ -50,10 +50,6 @@ bool addTableEntry(Book * book, const char * tableName,
 bool addIndexEntry(char * book_id, int bookOffset, const char * indexName);
 
 void printTree(size_t level, const char * indexName);
-void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id, char side);
-bool addIndexEntryRec(FILE* f, Node node, char * book_id, int bookOffset, int del, int id, int type);
-
-
 
 /* Other functions that you may find useful
  * change extension

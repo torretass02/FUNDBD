@@ -1,4 +1,6 @@
-
+/*
+// Created by roberto on 29/8/20.
+*/
 
 #include "tester.h"
 
@@ -38,5 +40,5 @@ void checkPrint(const char * indexName)
         }
     }
     fclose(fp);
-    printf("* checkPrintTree: OK\n");
+    printf("* checkcreateTablecreateIndex: OK\n");
 }
